@@ -88,7 +88,7 @@ const About: React.FC = () => {
               <li>React</li>
               <li>AKILISSS</li>
               <li>KAY SIR CLIFF NGA SIGEG PANG DOGSHOW</li>
-              <li>CHATGPT, EEYYYY</li>
+              <li>CHATGPT, EEYYYY😎</li>
             </ul>
           </IonCardContent>
         </IonCard>
