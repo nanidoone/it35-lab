@@ -24,7 +24,7 @@ import Feed from './home-tabs/Feed';
 import Search from './home-tabs/Search';
 
 const Home: React.FC = () => {
-  // Feed data moved to Home.tsx
+  // Feed data
   const [feedData, setFeedData] = useState([
     { id: 1, label: "Renzo", imageUrl: "https://i.pinimg.com/736x/08/d7/e7/08d7e76811405c5a9d39ad09dcf86003.jpg" },
     { id: 2, label: "Me with my boyfriend", imageUrl: "https://i.pinimg.com/736x/db/42/3e/db423e07e10754975da34b6d019c48af.jpg" },
@@ -36,6 +36,20 @@ const Home: React.FC = () => {
     { id: 8, label: "Joeroz", imageUrl: "https://i.pinimg.com/736x/3b/29/6e/3b296e0ad6f3f393dba9df5a054f5868.jpg" },
     { id: 9, label: "June Rey", imageUrl: "https://i.pinimg.com/736x/23/69/b6/2369b6ef95a1b65f7b9a1d54b03fa38e.jpg" },
   ]);
+
+  // Favorites state
+  const [favorites, setFavorites] = useState<number[]>([]); // Stores IDs of favorited pictures
+
+  // Function to toggle favorites
+  const toggleFavorite = (id: number) => {
+    if (favorites.includes(id)) {
+      // Remove from favorites
+      setFavorites(favorites.filter((favId) => favId !== id));
+    } else {
+      // Add to favorites
+      setFavorites([...favorites, id]);
+    }
+  };
 
   const tabs = [
     { name: 'Feed', tab: 'feed', url: '/it35-lab/app/home/feed', icon: bookOutline },
@@ -57,13 +71,13 @@ const Home: React.FC = () => {
 
         <IonRouterOutlet>
           <Route exact path="/it35-lab/app/home/feed">
-            <Feed feedData={feedData} />
+            <Feed feedData={feedData} favorites={favorites} toggleFavorite={toggleFavorite} />
           </Route>
           <Route exact path="/it35-lab/app/home/search">
             <Search feedData={feedData} />
           </Route>
           <Route exact path="/it35-lab/app/home/favorites">
-            <Favorites />
+            <Favorites feedData={feedData} favorites={favorites} />
           </Route>
           <Route exact path="/it35-lab/app/home">
             <Redirect to="/it35-lab/app/home/feed" />

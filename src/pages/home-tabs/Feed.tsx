@@ -12,7 +12,10 @@ import {
   IonCol,
   IonImg,
   IonLabel,
+  IonIcon,
+  IonButton,
 } from '@ionic/react';
+import { heart, heartOutline } from 'ionicons/icons';
 
 interface FeedItem {
   id: number;
@@ -22,9 +25,11 @@ interface FeedItem {
 
 interface FeedProps {
   feedData: FeedItem[];
+  favorites: number[];
+  toggleFavorite: (id: number) => void;
 }
 
-const Feed: React.FC<FeedProps> = ({ feedData }) => {
+const Feed: React.FC<FeedProps> = ({ feedData, favorites, toggleFavorite }) => {
   return (
     <IonPage>
       <IonHeader>
@@ -49,6 +54,15 @@ const Feed: React.FC<FeedProps> = ({ feedData }) => {
                     alt={item.label} 
                     style={{ borderRadius: '10px', marginTop: '10px' }}
                   />
+                  <IonButton 
+                    fill="clear" 
+                    onClick={() => toggleFavorite(item.id)}
+                  >
+                    <IonIcon 
+                      icon={favorites.includes(item.id) ? heart : heartOutline} 
+                      color={favorites.includes(item.id) ? 'danger' : 'medium'} 
+                    />
+                  </IonButton>
                 </div>
               </IonCol>
             ))}
