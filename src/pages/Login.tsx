@@ -1,79 +1,127 @@
-import { 
-    IonButton,
-    IonButtons,
-      IonCard,
-      IonCardContent,
-      IonContent, 
-      IonHeader, 
-      IonInput, 
-      IonItem, 
-      IonLabel, 
-      IonMenuButton, 
-      IonPage, 
-      IonTitle, 
-      IonToast, 
-      IonToolbar, 
-      useIonRouter
-  } from '@ionic/react';
-  import {useState} from "react";
-  const Login: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigation = useIonRouter();
-    const [showToast, setshowToast] = useState(false);
-    const doLogin = () => {
-      setshowToast(true)
-      setTimeout (() => {
-        navigation.push('/it35-lab/app','forward','replace');
-    }, 1000);
-  }
-    const doRegister = () => {
-      navigation.push('/it35-lab/Signup','forward','replace')
+import {
+  IonAlert,
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonPage,
+  IonTitle,
+  IonToast,
+  IonToolbar,
+  useIonRouter
+} from '@ionic/react';
+
+import { useState } from 'react';
+import { supabase } from '../utils/supabaseClient';
+
+// Reusable AlertBox
+const AlertBox: React.FC<{
+  message: string;
+  isOpen: boolean;
+  onClose: () => void;
+}> = ({ message, isOpen, onClose }) => (
+  <IonAlert
+    isOpen={isOpen}
+    onDidDismiss={onClose}
+    header="Notification"
+    message={message}
+    buttons={['OK']}
+  />
+);
+
+const Login: React.FC = () => {
+  const navigation = useIonRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+
+  const doLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setErrorMessage(error.message);
+      setShowAlert(true);
+    } else {
+      setShowToast(true); 
+      setTimeout(() => {
+        navigation.push('/it35-lab/app', 'forward', 'replace');
+      }, 300);
     }
-    
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Login</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className='ion-padding'  style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <IonCard style={{ width: 'full', maxWidth: 'full', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
-          <IonCardContent>
-           <IonItem>
-              <IonLabel position="floating">Email</IonLabel>
-              <IonInput 
-                type="email" 
-                value={email} 
-                onIonChange={e => setEmail(e.detail.value!)} 
-                required 
-              />
-            </IonItem>
-            <IonItem>
-              <IonLabel position="floating">Password</IonLabel>
-              <IonInput 
-                type="password" 
-                value={password} 
-                onIonChange={e => setPassword(e.detail.value!)} 
-                required 
-              />
-            </IonItem>
-            <IonButton  onClick={() => doLogin()} id="open-toast" >Login</IonButton>
-             <IonToast
-                isOpen = {showToast}
-                onDidDismiss={() => setshowToast (false)}
-                trigger="open-toast"
-                duration={1000}
-                message="Login Successfully, Redirectering..."
-                position= "top"
-             ></IonToast>
-              <IonButton onClick = {() => doRegister ()}> Register </IonButton>
-             </IonCardContent>
-          </IonCard>   
-        </IonContent>
-      </IonPage>
-    );
   };
 
-  export default Login;
+  return (
+    <IonPage>
+      {/* Proper header structure for IonTitle */}
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>LOGIN</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+
+      <IonContent className="ion-padding">
+
+        {errorMessage && (
+          <div style={{ color: 'red', textAlign: 'center', marginBottom: '1rem' }}>
+            {errorMessage}
+          </div>
+        )}
+
+        <IonItem>
+          <IonInput
+            label="Email"
+            type="email"
+            value={email}
+            placeholder="Enter your email"
+            onIonInput={(e) => setEmail(e.detail.value!)}
+          />
+        </IonItem>
+
+        <IonItem>
+          <IonInput
+            type={showPassword ? 'text' : 'password'}
+            label="Password"
+            value={password}
+            placeholder="Enter your password"
+            onIonInput={(e) => setPassword(e.detail.value!)}
+          />
+          <IonButton fill="clear" onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? 'Hide' : 'Show'}
+          </IonButton>
+        </IonItem>
+
+        <IonButton onClick={doLogin} expand="full" style={{ marginTop: '1rem' }}>
+          Login
+        </IonButton>
+
+        <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+          <IonButton routerLink="/it35-lab/app/home/signup" fill="clear">
+            Creating New Account
+          </IonButton>
+        </div>
+
+        {/* AlertBox */}
+        <AlertBox
+          message={alertMessage}
+          isOpen={showAlert}
+          onClose={() => setShowAlert(false)}
+        />
+
+        {/* Toast works properly here */}
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message="Login successful! Redirecting..."
+          duration={1500}
+          position="top"
+          color="success"
+        />
+      </IonContent>
+    </IonPage>
+  );
+};
+
+export default Login;
