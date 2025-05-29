@@ -1,19 +1,17 @@
-
-import { 
+import {
   IonAlert,
   IonAvatar,
   IonButton,
-  IonContent, 
-  IonIcon, 
-  IonInput, 
-  IonInputPasswordToggle,  
-  IonPage,  
-  IonToast,  
+  IonContent,
+  IonInput,
+  IonInputPasswordToggle,
+  IonPage,
+  IonToast,
   useIonRouter
 } from '@ionic/react';
-import { logoIonic } from 'ionicons/icons';
 import { useState } from 'react';
 import { supabase } from '../utils/supabaseClient';
+import './Login.css'; // 👈 make sure this path is correct
 
 const AlertBox: React.FC<{ message: string; isOpen: boolean; onClose: () => void }> = ({ message, isOpen, onClose }) => {
   return (
@@ -44,83 +42,66 @@ const Login: React.FC = () => {
       return;
     }
 
-    setShowToast(true); 
+    setShowToast(true);
     setTimeout(() => {
       navigation.push('/it35-lab/app', 'forward', 'replace');
     }, 300);
   };
-  
+
   return (
     <IonPage>
-      <IonContent className='ion-padding'>
-        <div style={{
-          display: 'flex',
-          flexDirection:'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop:'25%'
-        }}>
-          <IonAvatar
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '150px',
-              height: '150px',
-              borderRadius: '50%', 
-              overflow: 'hidden' 
-            }}
-          >
-            <IonIcon 
-              icon={logoIonic}
-              color='primary'
-              style={{ fontSize: '120px', color: '#6c757d' }} 
+      <IonContent className="ion-padding login-container">
+        <div className="login-box">
+          <IonAvatar style={{ width: '100px', height: '100px', marginBottom: '20px' }}>
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/4352/4352212.png"
+              alt="User Icon"
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
           </IonAvatar>
-          <h1 style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>USER LOGIN</h1>
+
+          <h2 className="login-title">USER LOGIN</h2>
+
           <IonInput
-            label="Email" 
-            labelPlacement="floating" 
+            label="Email"
+            labelPlacement="floating"
             fill="outline"
             type="email"
             placeholder="Enter Email"
             value={email}
             onIonChange={e => setEmail(e.detail.value!)}
           />
-          <IonInput style={{ marginTop:'10px' }}      
+
+          <IonInput
+            style={{ marginTop: '10px' }}
             fill="outline"
             type="password"
             placeholder="Password"
             value={password}
             onIonChange={e => setPassword(e.detail.value!)}
           >
-            <IonInputPasswordToggle slot="end"></IonInputPasswordToggle>
+            <IonInputPasswordToggle slot="end" />
           </IonInput>
+
+          <IonButton onClick={doLogin} expand="block" shape="round" style={{ marginTop: '20px' }}>
+            Login
+          </IonButton>
+
+          <IonButton routerLink="/it35-lab/signup" expand="block" fill="clear" shape="round">
+            Don't have an account? Register here
+          </IonButton>
+
+          <AlertBox message={alertMessage} isOpen={showAlert} onClose={() => setShowAlert(false)} />
+
+          <IonToast
+            isOpen={showToast}
+            onDidDismiss={() => setShowToast(false)}
+            message="Login successful! Redirecting..."
+            duration={1500}
+            position="top"
+            color="success"
+          />
         </div>
-        <IonButton onClick={doLogin} expand="full" shape='round'>
-          Login
-        </IonButton>
-
-        <IonButton routerLink="/it35-lab/signup" expand="full" fill="clear" shape='round'>
-          Don't have an account? Register here
-        </IonButton>
-
-        {/* Reusable AlertBox Component */}
-        <AlertBox message={alertMessage} isOpen={showAlert} onClose={() => setShowAlert(false)} />
-
-        {/* IonToast for success message */}
-        <IonToast
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message="Login successful! Redirecting..."
-          duration={1500}
-          position="top"
-          color="primary"
-        />
       </IonContent>
     </IonPage>
   );

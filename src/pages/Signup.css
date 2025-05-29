@@ -1,0 +1,47 @@
+/* Signup.css - styled same as your Login but no avatar/image */
+
+.ion-padding {
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f7f7f7;
+  padding: 20px;
+}
+
+.signup-box {
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.signup-title {
+  font-weight: bold;
+  font-size: 24px;
+  color: #f06292; /* pinkish color similar to Ionic logo */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+ion-input {
+  margin-top: 12px;
+}
+
+ion-button {
+  margin-top: 20px;
+  --border-radius: 25px;
+}
+
+/* For modal content alignment */
+ion-modal .ion-padding {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
